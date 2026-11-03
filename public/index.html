@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fútbol Stats Pro 2026</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px;background:#121b32;border-bottom:1px solid #263653}
+h1{margin:0;color:#42e6a4;font-size:25px}
+header p{color:#9eacc4;margin-bottom:0}
+main{max-width:850px;margin:auto;padding:18px}
+.card{background:#151f36;padding:18px;border-radius:14px;margin-bottom:16px}
+h2{font-size:19px;margin-top:0}
+input,button{width:100%;padding:13px;margin:6px 0;border-radius:8px;border:0;font-size:15px}
+input{background:#26334e;color:white}
+button{background:#42e6a4;color:#07140e;font-weight:bold;cursor:pointer}
+.result{color:#b9c7dc;line-height:1.7}
+.team{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+footer{text-align:center;color:#75839d;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>⚽ FÚTBOL STATS PRO</h1>
+<p>Estadísticas, comparativas y pronósticos 2026</p>
+</header>
+<main>
+<div class="card">
+<h2>🔎 Comparar equipos</h2>
+<div class="team">
+<input id="home" placeholder="Equipo local">
+<input id="away" placeholder="Equipo visitante">
+</div>
+<button onclick="compare()">COMPARAR EQUIPOS</button>
+<div id="result" class="result">Escribe los nombres de dos equipos para comenzar.</div>
+</div>
+
+<div class="card">
+<h2>📅 Partidos</h2>
+<p class="result">Consulta los encuentros disponibles en nuestra fuente de datos.</p>
+<button onclick="matches()">CONSULTAR PARTIDOS</button>
+<div id="matches" class="result"></div>
+</div>
+
+<div class="card">
+<h2>📊 Estadísticas</h2>
+<p class="result">Próximamente: últimos 5 partidos, goles, córners, tiros a puerta, faltas y tarjetas.</p>
+</div>
+</main>
+<footer>Fútbol Stats Pro 2026 · Datos sujetos a disponibilidad de la API</footer>
+
+<script>
+async function compare(){
+ const h=document.getElementById("home").value.trim();
+ const a=document.getElementById("away").value.trim();
+ if(!h||!a){alert("Escribe los dos equipos");return;}
+ document.getElementById("result").innerText="Comparación de "+h+" vs "+a+". La conexión de estadísticas se configurará en el siguiente paso.";
+}
+async function matches(){
+ const box=document.getElementById("matches");
+ box.innerText="Consultando...";
+ try{
+  const r=await fetch("/api/matches");
+  const d=await r.json();
+  box.innerText=d.message||d.error||JSON.stringify(d);
+ }catch(e){box.innerText="No se pudo conectar con el servidor.";}
+}
+</script>
+</body>
+</html>
